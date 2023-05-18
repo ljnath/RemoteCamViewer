@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.33328.57
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemoteCamViewer", "RemoteCamViewer\RemoteCamViewer.csproj", "{A748DAFC-F2C3-463E-9415-0C6DAFC9DC5D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A748DAFC-F2C3-463E-9415-0C6DAFC9DC5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A748DAFC-F2C3-463E-9415-0C6DAFC9DC5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A748DAFC-F2C3-463E-9415-0C6DAFC9DC5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A748DAFC-F2C3-463E-9415-0C6DAFC9DC5D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6C7EED0B-0C6F-4946-80CD-01E2D436919A}
+	EndGlobalSection
+EndGlobal
