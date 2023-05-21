@@ -1,11 +1,13 @@
 ﻿using MetroFramework.Controls;
-using RemoteCamViewer.Models;
 using System.Collections.Generic;
 using System.Threading;
 using System.Windows.Forms;
 
 namespace RemoteCamViewer.Common
 {
+    /// <summary>
+    /// Singleton class to keep track of runtime data
+    /// </summary>
     class RuntimeConfig
     {
         private static readonly RuntimeConfig runtimeConfig = new RuntimeConfig();
@@ -28,12 +30,8 @@ namespace RemoteCamViewer.Common
         }
 
         internal List<Thread> ViewerThreads { get; set; } = new List<Thread>();
-        internal List<PictureBox> ViewerPictureBox { get; set; } = new List<PictureBox>();
+        internal List<PictureBox> ViewerPictureBoxes { get; set; } = new List<PictureBox>();
         internal MetroLabel StatusLabel { get; set; } = new MetroLabel();
-
-        internal string GetImageUrl(string address, int channelNumber)
-        {
-            return $"http://{address}/webcapture.jpg?command=snap&channel={channelNumber}";
-        }
+        internal string ActiveCameraID { get; set; }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using RemoteCamViewer.Handlers.IO;
 using RemoteCamViewer.Models;
 using System;
+using System.Collections;
 using System.Linq;
 
 namespace RemoteCamViewer.Handlers
@@ -27,45 +28,36 @@ namespace RemoteCamViewer.Handlers
             }
         }
 
-        internal GenericConfig Config { get; set; } = new GenericConfig();
+        internal AllConfig Config { get; set; } = new AllConfig();
 
 
-        public void UpdateCamConfig(CamConfig remoteCamConfig)
+
+        internal void UpdateCamera(Camera camera)
         {
-            CamConfig existingCamConfig = Config.CamConfigs.FirstOrDefault(c => c.Id.Equals(remoteCamConfig.Id));
+            Camera existingCamConfig = Config.Cameras.FirstOrDefault(c => c.ID.Equals(camera.ID));
             if (existingCamConfig != null)
             {
-                existingCamConfig.Name = remoteCamConfig.Name;
-                existingCamConfig.Address = remoteCamConfig.Address;
-                existingCamConfig.FPS = remoteCamConfig.FPS;
-                existingCamConfig.ImageZoom = remoteCamConfig.ImageZoom;
-                existingCamConfig.TotalChannel = remoteCamConfig.TotalChannel;
+                existingCamConfig.Type = camera.Type;
+                existingCamConfig.Name = camera.Name;
+                existingCamConfig.NetworkAddress = camera.NetworkAddress;
+                existingCamConfig.FPS = camera.FPS;
+                existingCamConfig.ZoomPercent = camera.ZoomPercent;
+                existingCamConfig.TotalChannel = camera.TotalChannel;
+
+
                 Save();
             }
         }
 
-        public void AddCamConfig(CamConfig remoteCamConfig)
+        internal void AddCamera(Camera camera)
         {
-            Config.CamConfigs.Add(remoteCamConfig);
+            Config.Cameras.Add(camera);
             Save();
         }
 
-        public CamConfig FindCamConfig(string camAddress)
+        internal void DeleteCamera(string cameraId)
         {
-            return Config.CamConfigs.FirstOrDefault(config => config.Address.Equals(camAddress)) ?? null;
-        }
-
-        public CamConfig FindCamById(string camId)
-        {
-            if (!string.IsNullOrEmpty(camId))
-                return Config.CamConfigs.FirstOrDefault(config => config.Id.Equals(camId)) ?? new CamConfig();
-
-            return new CamConfig();
-        }
-
-        public void DeleteCamConfig(string camId)
-        {
-            Config.CamConfigs.RemoveAll(config => config.Id.Equals(camId));
+            Config.Cameras.RemoveAll(config => config.ID.Equals(cameraId));
             Save();
         }
 

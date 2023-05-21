@@ -5,6 +5,11 @@ using System.Windows.Forms;
 
 namespace RemoteCamViewer.Extensions
 {
+    /// <summary>
+    /// Extension class for common form operation
+    /// 
+    /// Mainly used to find UI controls inside a form
+    /// </summary>
     internal static class FormControlExtension
     {
         internal static IEnumerable<Control> FindAll(this Control parentControl, Type controlType)
@@ -16,8 +21,6 @@ namespace RemoteCamViewer.Extensions
         {
             return GetAllControls(parentControl, controlTypes);
         }
-
-
 
         private static IEnumerable<Control> GetAllControls(Control parentControl, Type controlType)
         {
@@ -31,12 +34,9 @@ namespace RemoteCamViewer.Extensions
         {
             List<Control> validControls = new List<Control>();
             foreach (var controlType in controlTypes)
-            {
                 validControls.AddRange(GetAllControls(parentControl, controlType));
-            }
+
             return validControls;
         }
     }
-
-
 }

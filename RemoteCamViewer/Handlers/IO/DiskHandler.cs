@@ -1,12 +1,16 @@
-﻿using RemoteCamViewer.Common;
+﻿using log4net;
+using RemoteCamViewer.Common;
 using RemoteCamViewer.Models;
+using System;
 using System.IO;
+using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
 
 namespace RemoteCamViewer.Handlers.IO
 {
     class DiskHandler
     {
+        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private static readonly DiskHandler diskHandler = new DiskHandler();
 
         private static readonly object padlock = new object();
@@ -29,10 +33,20 @@ namespace RemoteCamViewer.Handlers.IO
 
         internal void SaveConfigurationToFile()
         {
-            BinaryFormatter binaryFormatter = new BinaryFormatter();
-            using (FileStream fileStream = new FileStream(Constants.ConfigFilePath, FileMode.Create, FileAccess.Write, FileShare.None))
+            try
             {
-                binaryFormatter.Serialize(fileStream, ConfigHandler.Instance.Config);
+                BinaryFormatter binaryFormatter = new BinaryFormatter();
+                using (FileStream fileStream = new FileStream(Constants.ConfigFilePath, FileMode.Create, FileAccess.Write, FileShare.None))
+                {
+                    binaryFormatter.Serialize(fileStream, ConfigHandler.Instance.Config);
+                }
+                FormHandler.Instance.ShowStatusMessage("Successfully saved current settings");
+            }
+            catch (Exception ex)
+            {
+                log.Error($"Failed to save configuration file {Constants.ConfigFilePath}. Error={ex}");
+                FormHandler.Instance.ShowStatusMessage("Failed to save settings");
+
             }
         }
 
@@ -45,12 +59,15 @@ namespace RemoteCamViewer.Handlers.IO
                     BinaryFormatter binaryFormatter = new BinaryFormatter();
                     using (FileStream fileStream = new FileStream(Constants.ConfigFilePath, FileMode.Open, FileAccess.Read, FileShare.None))
                     {
-                        ConfigHandler.Instance.Config = (GenericConfig)binaryFormatter.Deserialize(fileStream);
+                        ConfigHandler.Instance.Config = (AllConfig)binaryFormatter.Deserialize(fileStream);
                     }
+                    FormHandler.Instance.ShowStatusMessage("Successfully loaded saved settings");
                 }
-                catch
+                catch (Exception ex)
                 {
-                    CleanupConfig();
+                    log.Error($"Failed to loaded existing configuration file {Constants.ConfigFilePath}. Error={ex}");
+                    FormHandler.Instance.ShowStatusMessage("Failed to load saved settings");
+                    //CleanupConfig();
                 }
             }
         }
@@ -62,10 +79,13 @@ namespace RemoteCamViewer.Handlers.IO
                 if (File.Exists(Constants.ConfigFilePath))
                 {
                     File.Delete(Constants.ConfigFilePath);
+                    log.Error($"Successfully deleted existing configuration file {Constants.ConfigFilePath}");
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                log.Error($"Failed to delete configuration file {Constants.ConfigFilePath}. Error={ex}");
+                FormHandler.Instance.ShowStatusMessage("Save settings is corrupt; reloaded default settings");
             }
         }
     }

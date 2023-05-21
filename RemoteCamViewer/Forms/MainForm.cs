@@ -2,6 +2,7 @@
 using RemoteCamViewer.Handlers;
 using RemoteCamViewer.Handlers.IO;
 using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace RemoteCamViewer.Forms
@@ -19,19 +20,24 @@ namespace RemoteCamViewer.Forms
             FormHandler.Instance.ButtonClicks(this, sender);
         }
 
-        private void mcbCamAddress_SelectionChangeCommitted(object sender, EventArgs e)
+        private void AllMetroComboBoxSelectionChangeCommitted(object sender, EventArgs e)
         {
-            mbtnStartStop.Enabled = mcbCamAddress.SelectedIndex != -1;
+            FormHandler.Instance.ComboBoxSelectedChangeCommitted(this, sender);
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            CamHandler.Instance.StopViewer();
+            CameraHandler.Instance.StopViewer();
         }
 
         private void MainForm_HelpButtonClicked(object sender, System.ComponentModel.CancelEventArgs e)
         {
             NetworkHandler.OpenHomePage();
+        }
+
+        private void AllComboxBoxSelectedIndexChanged(object sender, EventArgs e)
+        {
+            FormHandler.Instance.ComboBoxSelectedChangeCommitted(this, sender);
         }
     }
 }

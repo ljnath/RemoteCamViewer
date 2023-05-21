@@ -8,15 +8,17 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>RemoteCamViewer</RootNamespace>
     <AssemblyName>Remote Cam Viewer</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -27,7 +29,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -40,6 +42,18 @@
     <ApplicationIcon>cam_viewer.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Accord, Version=3.8.0.0, Culture=neutral, PublicKeyToken=fa1a88e29555ccf7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Accord.3.8.0\lib\net462\Accord.dll</HintPath>
+    </Reference>
+    <Reference Include="Accord.Video, Version=3.8.0.0, Culture=neutral, PublicKeyToken=fa1a88e29555ccf7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Accord.Video.3.8.0\lib\net462\Accord.Video.dll</HintPath>
+    </Reference>
+    <Reference Include="Accord.Video.FFMPEG, Version=3.8.0.0, Culture=neutral, PublicKeyToken=fa1a88e29555ccf7, processorArchitecture=x86">
+      <HintPath>..\packages\Accord.Video.FFMPEG.3.8.0\lib\net462\Accord.Video.FFMPEG.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=2.0.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.15\lib\net45\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="MetroFramework, Version=1.4.0.0, Culture=neutral, PublicKeyToken=5f91a84759bf584a, processorArchitecture=MSIL">
       <HintPath>..\packages\MetroModernUI.1.4.0.0\lib\net\MetroFramework.dll</HintPath>
     </Reference>
@@ -50,7 +64,10 @@
       <HintPath>..\packages\MetroModernUI.1.4.0.0\lib\net\MetroFramework.Fonts.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -63,8 +80,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\Constants.cs" />
-    <Compile Include="Exceptions\MissingCamException.cs" />
+    <Compile Include="Common\HashSet.cs" />
+    <Compile Include="Exceptions\CameraException.cs" />
     <Compile Include="Extensions\FormControlExtension.cs" />
+    <Compile Include="Extensions\CameraUrlAttribute.cs" />
+    <Compile Include="Extensions\CameraExtension.cs" />
+    <Compile Include="Extensions\StringExtension.cs" />
     <Compile Include="Forms\ConfigForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -77,14 +98,15 @@
     <Compile Include="Forms\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Handlers\CamHandler.cs" />
+    <Compile Include="Handlers\CameraHandler.cs" />
     <Compile Include="Handlers\ConfigHandler.cs" />
     <Compile Include="Handlers\FormHandler.cs" />
     <Compile Include="Handlers\IO\DiskHandler.cs" />
     <Compile Include="Handlers\IO\NetworkHandler.cs" />
-    <Compile Include="Models\MetroComboBoxItem.cs" />
-    <Compile Include="Models\GenericConfig.cs" />
-    <Compile Include="Models\CamConfig.cs" />
+    <Compile Include="Handlers\VideoHandler.cs" />
+    <Compile Include="Models\CameraType.cs" />
+    <Compile Include="Models\AllConfig.cs" />
+    <Compile Include="Models\Camera.cs" />
     <Compile Include="Common\RuntimeConfig.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -125,4 +147,13 @@
     <None Include="Resources\offline.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\Accord.3.8.0\build\Accord.targets" Condition="Exists('..\packages\Accord.3.8.0\build\Accord.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Accord.3.8.0\build\Accord.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Accord.3.8.0\build\Accord.targets'))" />
+    <Error Condition="!Exists('..\packages\Accord.Video.FFMPEG.3.8.0\build\Accord.Video.FFMPEG.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Accord.Video.FFMPEG.3.8.0\build\Accord.Video.FFMPEG.targets'))" />
+  </Target>
+  <Import Project="..\packages\Accord.Video.FFMPEG.3.8.0\build\Accord.Video.FFMPEG.targets" Condition="Exists('..\packages\Accord.Video.FFMPEG.3.8.0\build\Accord.Video.FFMPEG.targets')" />
 </Project>
