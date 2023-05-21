@@ -142,15 +142,20 @@ namespace RemoteCamViewer.Handlers
                     continue;
 
                 int channelNumber = camera.GetChannelNumberFromIndex(i);
-
                 BackgroundWorker worker = new BackgroundWorker();
                 worker.DoWork += (sender, args) =>
                 {
-                    bool autoDeleteSource = ConfigHandler.Instance.Config.AutoDeleteSourceImages;
-
-                    string sourceImagesPath = camera.GetImageSaveDirectory(channelNumber, ConfigHandler.Instance.Config.AutoSaveDirectory);
-                    VideoHandler videoHandler = new VideoHandler();
-                    videoHandler.CreateVideoFromImages(sourceImagesPath, ConfigHandler.Instance.Config.OutputVideoFPS, autoDeleteSource);
+                    try
+                    {
+                        bool autoDeleteSource = ConfigHandler.Instance.Config.AutoDeleteSourceImages;
+                        string sourceImagesPath = camera.GetImageSaveDirectory(channelNumber, ConfigHandler.Instance.Config.AutoSaveDirectory);
+                        VideoHandler videoHandler = new VideoHandler();
+                        videoHandler.CreateVideoFromImages(sourceImagesPath, ConfigHandler.Instance.Config.OutputVideoFPS, autoDeleteSource);
+                    }
+                    catch (Exception ex)
+                    {
+                        log.Error($"Failed to initate video exporter for channel number {channelNumber}. Errror={ex}");
+                    }
 
                     // Signal the completion
                     countdownEvent.Signal();

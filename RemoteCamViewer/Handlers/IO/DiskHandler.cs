@@ -5,6 +5,7 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Threading;
 
 namespace RemoteCamViewer.Handlers.IO
 {
@@ -86,6 +87,21 @@ namespace RemoteCamViewer.Handlers.IO
             {
                 log.Error($"Failed to delete configuration file {Constants.ConfigFilePath}. Error={ex}");
                 FormHandler.Instance.ShowStatusMessage("Save settings is corrupt; reloaded default settings");
+            }
+        }
+
+        internal void DeleteDirectoryForcefully(string directoryPath)
+        {
+            while (Directory.Exists(directoryPath))
+            {
+                try
+                {
+                    Directory.Delete(directoryPath, true);
+                }
+                catch
+                {
+                    Thread.Sleep(50);
+                }
             }
         }
     }

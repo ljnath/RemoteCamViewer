@@ -13,6 +13,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace RemoteCamViewer.Handlers
@@ -491,6 +492,9 @@ namespace RemoteCamViewer.Handlers
                     pictureBox.Image = image;
                     pictureBox.Refresh();
                 }
+            }
+            catch (ThreadAbortException)
+            { 
             }
             catch (Exception ex)
             {

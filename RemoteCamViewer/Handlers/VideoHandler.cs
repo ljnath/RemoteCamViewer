@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Accord.Video.FFMPEG;
+using log4net;
+using RemoteCamViewer.Handlers.IO;
+using System;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using Accord.Video.FFMPEG;
-using log4net;
 
 namespace RemoteCamViewer.Handlers
 {
@@ -22,7 +23,6 @@ namespace RemoteCamViewer.Handlers
         {
             string directoryName = Path.GetFileName(imageDirectory);
             string outputVideoFilePath = Path.Combine(Path.GetDirectoryName(imageDirectory), $"{directoryName}_{DateTime.Now:HHmmss}.mp4");
-
             try
             {
                 string[] allJpgFiles = Directory.GetFiles(imageDirectory, "*.jpg", SearchOption.TopDirectoryOnly);
@@ -51,9 +51,9 @@ namespace RemoteCamViewer.Handlers
                 }
 
                 if (deleteSourceImages)
-                    allJpgFiles.ToList().ForEach(imageFilePath => { File.Delete(imageFilePath); });
+                    DiskHandler.Instance.DeleteDirectoryForcefully(imageDirectory);
 
-                log.Info($"Successfully exported video file {outputVideoFilePath} from {allJpgFiles.Length} images under {imageDirectory} with {fps} FPS");
+                log.Debug($"Successfully exported video file {outputVideoFilePath} from {allJpgFiles.Length} images under {imageDirectory} with {fps} FPS");
             }
             catch (Exception ex)
             {
