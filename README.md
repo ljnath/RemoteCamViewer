@@ -6,6 +6,9 @@ Date : May 2023<br>
 Email : ljnath@ljnath.com<br>
 Website : https://ljnath.com
 
+[![Download Remote Cam Viewer](https://img.shields.io/sourceforge/dm/remotecamviewer.svg)](https://sourceforge.net/projects/remotecamviewer/files/latest/download)
+
+[![Download Remote Cam Viewer](https://a.fsdn.com/con/app/sf-download-button)](https://sourceforge.net/projects/remotecamviewer/files/latest/download)
 
 ## Introduction
 
