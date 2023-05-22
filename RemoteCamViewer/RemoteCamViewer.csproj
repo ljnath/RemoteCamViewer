@@ -80,8 +80,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\Constants.cs" />
-    <Compile Include="Common\HashSet.cs" />
-    <Compile Include="Exceptions\CameraException.cs" />
     <Compile Include="Extensions\FormControlExtension.cs" />
     <Compile Include="Extensions\CameraUrlAttribute.cs" />
     <Compile Include="Extensions\CameraExtension.cs" />
