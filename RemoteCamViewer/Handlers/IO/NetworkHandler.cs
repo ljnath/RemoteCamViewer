@@ -10,7 +10,7 @@ namespace RemoteCamViewer.Handlers.IO
 {
     class NetworkHandler
     {
-        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        //private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         private static byte[] DownloadDataFromUrl(string imageUrl, int timeoutInSec)
         {
@@ -22,11 +22,11 @@ namespace RemoteCamViewer.Handlers.IO
                     return client.GetByteArrayAsync(imageUrl).Result;
                 }
             }
-            catch (ThreadAbortException threadAbortException)
+            catch (ThreadAbortException)
             {
                 //log.Error($"Download from {imageUrl} failed due to timeout");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 //log.Error($"Failed to download data from {imageUrl}. Error={ex}");
             }

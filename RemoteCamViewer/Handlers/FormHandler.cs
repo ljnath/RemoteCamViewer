@@ -522,7 +522,7 @@ namespace RemoteCamViewer.Handlers
                 }
             }
 
-            catch (InvalidAsynchronousStateException ex)
+            catch (InvalidAsynchronousStateException)
             {
                 //log.Error($"Faied to update status on UI as the source thread has exited");
             }
