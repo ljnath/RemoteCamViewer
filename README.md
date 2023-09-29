@@ -1,8 +1,8 @@
 # RemoteCamViewer
-### Version 1.0.0
+### Version 1.1.0
 
 Author : Lakhya Jyoti Nath (ljnath)<br>
-Date : May 2023<br>
+Date : May 2023 - September 2023<br>
 Email : ljnath@ljnath.com<br>
 Website : https://ljnath.com
 
